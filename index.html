@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cute na animation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Floating hearts animation */
+    .floating-heart {
+      position: absolute;
+      bottom: -50px;
+      animation: floatUp linear infinite;
+      font-size: 1.5rem;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+
+    /* Pulse animation for main heart */
+    .main-heart {
+      animation: pulse 1.2s infinite;
+      transform-origin: center;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body class="relative overflow-hidden min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 via-rose-300 to-red-300">
+
+  <!-- Floating Hearts Background -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="floating-heart left-[5%]" style="animation-duration: 6s;">💖</div>
+    <div class="floating-heart left-[15%]" style="animation-duration: 7s; animation-delay: 1s;">💘</div>
+    <div class="floating-heart left-[25%]" style="animation-duration: 8s; animation-delay: 2s;">💗</div>
+    <div class="floating-heart left-[35%]" style="animation-duration: 6.5s; animation-delay: 0.5s;">❤️</div>
+    <div class="floating-heart left-[45%]" style="animation-duration: 7.5s; animation-delay: 1.5s;">💞</div>
+    <div class="floating-heart left-[55%]" style="animation-duration: 9s; animation-delay: 3s;">💓</div>
+    <div class="floating-heart left-[65%]" style="animation-duration: 6.8s; animation-delay: 0.8s;">💝</div>
+    <div class="floating-heart left-[75%]" style="animation-duration: 8.2s; animation-delay: 2.2s;">💟</div>
+    <div class="floating-heart left-[85%]" style="animation-duration: 7.3s; animation-delay: 1.3s;">💌</div>
+    <div class="floating-heart left-[95%]" style="animation-duration: 8.7s; animation-delay: 2.7s;">💕</div>
+  </div>
+
+  <!-- Main Heart with Arrow -->
+  <div class="relative z-10 text-center flex flex-col items-center">
+    <div class="w-96 h-96 mx-auto" style="margin-bottom: 0px;">
+      <img src="pictures/Arrow.png" alt="Heart with Arrow" class="main-heart w-full h-full object-contain">
+    </div>
+    <!-- Romantic Text -->
+   <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-400 to-red-500 drop-shadow-lg animate-pulse" style="margin-top: -80px; font-family: 'Cursive', sans-serif;">
+  My heart beats only for you
+</h1>
+<p class="text-xl md:text-2xl opacity-90 text-white mt-4 text-center font-semibold" style="font-family: 'Cursive', sans-serif;">
+  I’m so lucky that you are my girlfriend
+</p>
+
+  </div>
+
+  <script>
+  // Redirect to question.html after 10 seconds
+  setTimeout(() => {
+    window.location.href = "question.html";
+  }, 10000);
+</script>
+
+
+</body>
+</html>

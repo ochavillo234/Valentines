@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    overflow: hidden;
+    background: linear-gradient(to bottom, #fbb6ce, #f472b6, #ec4899);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  @keyframes zoomEnvelope {
+    0% { transform: scale(0.1); opacity: 0; }
+    50% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 1; }
+  }
+
+  .envelope-container {
+    transform-origin: center center;
+    animation: zoomEnvelope 2s forwards ease-in-out;
+  }
+
+  @keyframes flapOpen {
+    0% { transform: rotateX(0deg); }
+    50% { transform: rotateX(-140deg); }
+    100% { transform: rotateX(-140deg); }
+  }
+
+  .flap-group {
+    transform-origin: top center;
+    animation: flapOpen 1s forwards;
+    animation-delay: 2s;
+  }
+
+  @keyframes heartPop {
+    0% { transform: translate(0,0) scale(0); opacity: 1; }
+    50% { transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(var(--rot1)); opacity: 0.8; }
+    75% { transform: translate(calc(var(--dx)*1.5), calc(var(--dy)*1.5)) scale(1) rotate(var(--rot2)); opacity: 0.6; }
+    100% { transform: translate(calc(var(--dx)*2), calc(var(--dy)*2)) scale(0.8) rotate(var(--rot3)); opacity: 0; }
+  }
+
+  .confetti-heart {
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: #f87171;
+    animation: heartPop 3s forwards ease-out;
+  }
+
+  /* Valentine Popup */
+  .valentine-popup {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 192, 203, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 50;
+    backdrop-filter: blur(3px);
+  }
+
+  .valentine-popup.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .popup-card {
+    background: #fff0f5;
+    border-radius: 2rem;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(255, 105, 180, 0.3);
+    border: 3px solid #f43f5e;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .popup-card h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #f43f5e, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .popup-card p {
+    font-size: 1.1rem;
+    color: #334155;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-yes, .btn-no {
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-yes {
+    background: linear-gradient(to right, #f43f5e, #ec4899);
+    color: white;
+    box-shadow: 0 8px 15px rgba(244, 63, 94, 0.3);
+  }
+
+  .btn-yes:hover {
+    transform: scale(1.1);
+  }
+
+  .btn-no {
+    background: #f1f5f9;
+    color: #334155;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  }
+
+  .btn-no:hover {
+    transform: scale(1.05);
+  }
+
+  /* Love message card */
+  .love-message-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 450px;
+    max-height: 70%;
+    background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
+    border: 3px solid #f43f5e;
+    border-radius: 2rem;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(244, 63, 94, 0.3);
+    overflow-y: auto;
+    text-align: center;
+    z-index: 100;
+    animation: popIn 0.6s ease forwards;
+  }
+
+  .love-message-card::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .love-message-card::-webkit-scrollbar-thumb {
+    background-color: #f43f5e;
+    border-radius: 4px;
+  }
+
+  .love-message-card h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f43f5e;
+    margin-bottom: 1rem;
+  }
+
+  .love-message-card p {
+    font-size: 1.1rem;
+    color: #c026d3;
+    line-height: 1.6;
+  }
+
+  @keyframes popIn {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  /* Heart confetti for YES click */
+  @keyframes heartConfetti {
+    0% { transform: translate(0,0) scale(0); opacity: 1; }
+    25% { transform: translate(var(--dx1), var(--dy1)) scale(1.2) rotate(var(--rot1)); opacity: 0.9; }
+    50% { transform: translate(var(--dx2), var(--dy2)) scale(1) rotate(var(--rot2)); opacity: 0.7; }
+    75% { transform: translate(var(--dx3), var(--dy3)) scale(0.8) rotate(var(--rot3)); opacity: 0.5; }
+    100% { transform: translate(var(--dx4), var(--dy4)) scale(0.5) rotate(var(--rot4)); opacity: 0; }
+  }
+
+  .confetti-heart-yes {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    fill: #f43f5e;
+    animation: heartConfetti 2s forwards ease-out;
+  }
+</style>
+</head>
+<body class="relative h-screen">
+
+<!-- Envelope -->
+<div class="absolute inset-0 flex items-center justify-center envelope-container" id="envelope">
+  <div class="relative w-28 h-28 md:w-44 md:h-44">
+    <svg viewBox="0 0 64 64" class="w-full h-full">
+      <rect x="4" y="20" width="56" height="28" rx="4" fill="#F87171" stroke="#ffffff" stroke-width="2"/>
+      <g class="flap-group">
+        <line x1="4" y1="20" x2="32" y2="28" stroke="#F87171" stroke-width="2" opacity="0.8"/>
+        <line x1="60" y1="20" x2="32" y2="28" stroke="#F87171" stroke-width="2" opacity="0.8"/>
+        <path fill="#ffffff" d="M32 20
+          c-3.5 -4 -9 -4 -9 0
+          c0 4 9 10 9 10
+          s9 -6 9 -10
+          c0 -4 -5.5 -4 -9 0z"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<!-- Valentine Popup -->
+<div id="valentinePopup" class="valentine-popup">
+  <div class="popup-card">
+    <h2> My Question for my love of my life (Choose wisely) </h2>
+    <p>Roses are red, violets are blue…<br>Every day is better when I’m with you.<br><span>Will you be my Valentine too?</span></p>
+
+    <div class="flex gap-4 justify-center">
+      <button onclick="yesClicked()" class="btn-yes">💖 Yes!</button>
+      <button onclick="noClicked(this)" class="btn-no">💔 No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const flap = document.querySelector('.flap-group');
+const popup = document.getElementById('valentinePopup');
+const envelope = document.getElementById('envelope');
+
+flap.addEventListener('animationend', () => {
+  const numHearts = 100;
+  for (let i = 0; i < numHearts; i++) {
+    const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    heart.setAttribute("viewBox", "0 0 24 24");
+    heart.classList.add('confetti-heart');
+
+    const dx = (Math.random() - 0.5) * 900;
+    const dy = (Math.random() - 0.7) * 900;
+
+    heart.style.setProperty('--dx', `${dx}px`);
+    heart.style.setProperty('--dy', `${dy}px`);
+    heart.style.setProperty('--rot1', `${Math.random()*360}deg`);
+    heart.style.setProperty('--rot2', `${Math.random()*360}deg`);
+    heart.style.setProperty('--rot3', `${Math.random()*360}deg`);
+
+    heart.style.left = `50%`;
+    heart.style.top = `50%`;
+    heart.style.animationDelay = `${Math.random() * 0.5}s`;
+
+    heart.innerHTML = '<path d="M12 21s-6-4.35-10-9c-2.67-3.05-1-8 4-8 3 0 4 2 4 2s1-2 4-2c5 0 6 4.95 4 8-4 4.65-10 9-10 9z"/>';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3500);
+  }
+
+  setTimeout(() => popup.classList.add('show'), 800);
+});
+
+function yesClicked() {
+  envelope.style.display = 'none';
+  popup.style.display = 'none';
+
+  const msg = document.createElement('div');
+  msg.classList.add('love-message-card');
+  msg.innerHTML = `
+    <h2>💖 Happy Valentine's! 💖</h2>
+    <p>
+      Panis ka nanaman sa homemade pick up lines ko noh? I know you’re gonna say yes, kase ako lang naman dapat ka Valentines mo. 
+      Duh, pinindot mo yung no? aghhhhh ansaket ng aking heart grabe ka na :( Sino yung ka Valentines mo na iba? 
+      Gusto mo saktan kita? Chariz, thank you much for saying yes mahal. I love you so, so much mahal. 
+      I can’t wait to celebrate our Valentines together super duper tagal na natin yieee. I love you so much, mahal, na mahal kita. 
+      Tandaan mo yan and also im specting a special treatment for that day called BJ omkie?
+    </p>
+  `;
+  document.body.appendChild(msg);
+
+  const numConfetti = 200;
+  for (let i = 0; i < numConfetti; i++) {
+    const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    heart.setAttribute("viewBox", "0 0 24 24");
+    heart.classList.add('confetti-heart-yes');
+
+    const dx1 = (Math.random() - 0.5) * 800;
+    const dy1 = (Math.random() - 0.5) * 600;
+    const dx2 = dx1 * 1.5;
+    const dy2 = dy1 * 1.5;
+    const dx3 = dx1 * 2;
+    const dy3 = dy1 * 2;
+    const dx4 = dx1 * 2.5;
+    const dy4 = dy1 * 2.5;
+
+    heart.style.setProperty('--dx1', `${dx1}px`);
+    heart.style.setProperty('--dy1', `${dy1}px`);
+    heart.style.setProperty('--dx2', `${dx2}px`);
+    heart.style.setProperty('--dy2', `${dy2}px`);
+    heart.style.setProperty('--dx3', `${dx3}px`);
+    heart.style.setProperty('--dy3', `${dy3}px`);
+    heart.style.setProperty('--dx4', `${dx4}px`);
+    heart.style.setProperty('--dy4', `${dy4}px`);
+
+    heart.style.setProperty('--rot1', `${Math.random()*360}deg`);
+    heart.style.setProperty('--rot2', `${Math.random()*360}deg`);
+    heart.style.setProperty('--rot3', `${Math.random()*360}deg`);
+    heart.style.setProperty('--rot4', `${Math.random()*360}deg`);
+
+    heart.style.left = "50%";
+    heart.style.top = "50%";
+    heart.style.animationDelay = `${Math.random()*0.5}s`;
+
+    heart.innerHTML = '<path d="M12 21s-6-4.35-10-9c-2.67-3.05-1-8 4-8 3 0 4 2 4 2s1-2 4-2c5 0 6 4.95 4 8-4 4.65-10 9-10 9z"/>';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+  }
+}
+
+function noClicked(btn) {
+  btn.style.position = "relative";
+  btn.style.left = (Math.random() * 120 - 60) + "px";
+  btn.style.top = (Math.random() * 60 - 30) + "px";
+}
+</script>
+
+</body>
+</html>
