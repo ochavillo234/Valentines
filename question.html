@@ -12,15 +12,32 @@
     font-family: 'Poppins', sans-serif;
   }
 
+  /* Envelope zoom animation */
   @keyframes zoomEnvelope {
-    0% { transform: scale(0.1); opacity: 0; }
-    50% { transform: scale(0.6); opacity: 1; }
-    100% { transform: scale(2.5); opacity: 1; }
+    0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; }
   }
 
   .envelope-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
     transform-origin: center center;
     animation: zoomEnvelope 2s forwards ease-in-out;
+    z-index: 40;
+  }
+
+  .envelope-container svg {
+    width: 150px;
+    height: 150px;
+  }
+
+  @media (max-width: 500px) {
+    .envelope-container svg {
+      width: 120px;
+      height: 120px;
+    }
   }
 
   @keyframes flapOpen {
@@ -63,6 +80,8 @@
     transition: opacity 0.6s ease;
     z-index: 50;
     backdrop-filter: blur(3px);
+    padding: 1rem;
+    box-sizing: border-box;
   }
 
   .valentine-popup.show {
@@ -75,7 +94,7 @@
     border-radius: 2rem;
     padding: 2rem;
     max-width: 400px;
-    width: 90%;
+    width: 100%;
     text-align: center;
     box-shadow: 0 15px 35px rgba(255, 105, 180, 0.3);
     border: 3px solid #f43f5e;
@@ -96,6 +115,14 @@
     font-size: 1.1rem;
     color: #334155;
     margin-bottom: 1.5rem;
+    word-wrap: break-word;
+    line-height: 1.4;
+  }
+
+  .flex {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   .btn-yes, .btn-no {
@@ -104,6 +131,9 @@
     border-radius: 9999px;
     cursor: pointer;
     transition: all 0.3s ease;
+    flex: 1 1 40%;
+    min-width: 100px;
+    margin-bottom: 0.5rem;
   }
 
   .btn-yes {
@@ -134,7 +164,7 @@
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 450px;
-    max-height: 70%;
+    max-height: 80%;
     background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
     border: 3px solid #f43f5e;
     border-radius: 2rem;
@@ -146,15 +176,6 @@
     animation: popIn 0.6s ease forwards;
   }
 
-  .love-message-card::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .love-message-card::-webkit-scrollbar-thumb {
-    background-color: #f43f5e;
-    border-radius: 4px;
-  }
-
   .love-message-card h2 {
     font-size: 2rem;
     font-weight: bold;
@@ -163,7 +184,7 @@
   }
 
   .love-message-card p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #c026d3;
     line-height: 1.6;
   }
@@ -189,12 +210,39 @@
     fill: #f43f5e;
     animation: heartConfetti 2s forwards ease-out;
   }
+
+  @media (max-width: 500px) {
+    .popup-card {
+      padding: 1.5rem;
+    }
+
+    .popup-card h2 {
+      font-size: 1.5rem;
+    }
+
+    .popup-card p {
+      font-size: 1rem;
+    }
+
+    .love-message-card {
+      padding: 1.5rem;
+      max-height: 80%;
+    }
+
+    .love-message-card h2 {
+      font-size: 1.5rem;
+    }
+
+    .love-message-card p {
+      font-size: 0.95rem;
+    }
+  }
 </style>
 </head>
 <body class="relative h-screen">
 
 <!-- Envelope -->
-<div class="absolute inset-0 flex items-center justify-center envelope-container" id="envelope">
+<div class="envelope-container" id="envelope">
   <div class="relative w-28 h-28 md:w-44 md:h-44">
     <svg viewBox="0 0 64 64" class="w-full h-full">
       <rect x="4" y="20" width="56" height="28" rx="4" fill="#F87171" stroke="#ffffff" stroke-width="2"/>
@@ -216,8 +264,7 @@
   <div class="popup-card">
     <h2> My Question for my love of my life (Choose wisely) </h2>
     <p>Roses are red, violets are blue…<br>Every day is better when I’m with you.<br><span>Will you be my Valentine too?</span></p>
-
-    <div class="flex gap-4 justify-center">
+    <div class="flex gap-4 justify-center flex-wrap">
       <button onclick="yesClicked()" class="btn-yes">💖 Yes!</button>
       <button onclick="noClicked(this)" class="btn-no">💔 No</button>
     </div>
